@@ -38,6 +38,7 @@ router.delete("/", async (req, res) => {
   }
 });
 
+// PUT /api/cart
 router.put("/", async (req, res) => {
   const { userId, productId, delta } = req.body;
 
@@ -57,5 +58,6 @@ router.put("/", async (req, res) => {
     res.status(500).json({ error: "Failed to update quantity" });
   }
 });
+
 
 module.exports = router;

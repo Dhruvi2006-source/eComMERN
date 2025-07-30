@@ -29,7 +29,7 @@ function BannerCarousel() {
 
   return (
     <div className="relative w-full max-w-7xl mx-auto rounded-lg shadow-lg overflow-hidden
-      h-56 sm:h-72 md:h-96 lg:h-[28rem] xl:h-[32rem] 2xl:h-[36rem] 3xl:h-[40rem]"
+      h-56 sm:h-72 md:h-96 lg:h-[28rem] xl:h-[32rem] 2xl:h-[36rem] 3xl:h-[40rem] mt-20"
     >
       {/* Slides */}
       <div className="relative h-full">

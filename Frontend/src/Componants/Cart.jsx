@@ -66,16 +66,45 @@ function Cart() {
       </div>
     );
 
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.quantity * item.productId.price,
-    0
-  );
+
+    const totalPrice = cartItems.reduce((sum, item) => {
+  const price = parseFloat(item.productId.price) || 0;
+  return sum + item.quantity * price;
+}, 0);
+
+
+  // const totalPrice = cartItems.reduce(
+  //   (sum, item) => sum + item.quantity * item.productId.price,
+  //   0
+  // );
+
+  const updateQuantity = async (productId, delta) => {
+    if (!userId) return;
+
+    try {
+      await axios.put("http://localhost:3000/api/cart", {
+        userId,
+        productId,
+        delta,
+      });
+
+      // Refresh the cart
+      const res = await axios.get(
+        `http://localhost:3000/api/cart?userId=${userId}`
+      );
+      setCartItems(res.data);
+    } catch (err) {
+      console.error("Failed to update quantity:", err);
+      alert("Failed to update item quantity.");
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 pt-20">
       <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
         Your Cart
       </h2>
+
       <div className="space-y-6">
         {cartItems.map((item) => (
           <div
@@ -94,13 +123,32 @@ function Cart() {
                 <h3 className="text-lg font-semibold text-gray-900">
                   {item.productId.title}
                 </h3>
-                <p className="text-gray-600">Price: {item.productId.price} ₹</p>
-                <p className="text-gray-600">Quantity: {item.quantity}</p>
+                <p className="text-gray-600">Price: ₹{item.productId.price}</p>
+
+                <div className="flex items-center mt-2 space-x-2">
+                  <button
+                    onClick={() => updateQuantity(item.productId._id, -1)}
+                    disabled={item.quantity <= 1}
+                    className="w-8 h-8 border rounded flex items-center justify-center disabled:opacity-50"
+                  >
+                    –
+                  </button>
+                  <span className="text-gray-700 font-medium">
+                    {item.quantity}
+                  </span>
+                  <button
+                    onClick={() => updateQuantity(item.productId._id, 1)}
+                    className="w-8 h-8 border rounded flex items-center justify-center"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
             </div>
+
             <div className="flex flex-col items-end space-y-2">
               <p className="text-lg font-semibold text-gray-900">
-                Subtotal: ₹{item.quantity * item.productId.price}
+                Subtotal: ₹{(item.quantity * item.productId.price).toFixed(2)}
               </p>
               <button
                 onClick={() => removeItem(item.productId._id)}
@@ -114,7 +162,7 @@ function Cart() {
       </div>
 
       <div className="mt-10 text-right border-t pt-6">
-        <p className="text-2xl font-bold text-gray-900">Total: ₹{totalPrice}</p>
+        <p className="text-2xl font-bold text-gray-900">Total: ₹{totalPrice.toFixed(2)}</p>
         <button
           onClick={() => alert("Proceed to checkout - implement your flow")}
           className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
