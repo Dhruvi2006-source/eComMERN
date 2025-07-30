@@ -10,7 +10,9 @@ dotenv.config();
 const rout = require('./Routs/Product')
 const cart = require('./Routs/Cart');
 const order = require('./Routs/Orders');
-// require('dotenv').config();
+
+const authRoutes = require('./Routs/Auth'); 
+
 dotenv.config();
 
 const app = express();
@@ -28,10 +30,11 @@ mongoose.connect(MONGO_URI, {
 .then(() => console.log('✅ Connected to MongoDB'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
-app.use('/' , rout);
+app.use('/api/products' , rout);
 app.use('/api/cart' , cart);
-app.use('/api/orders' , order)
+app.use('/api/orders' , order);
 
+app.use('/api', authRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

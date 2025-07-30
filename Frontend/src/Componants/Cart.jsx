@@ -1,123 +1,129 @@
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useUser } from "@clerk/clerk-react";
 
-const Cart = () => {
-  const { user } = useUser();
-  const userId = user?.id;
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom";
+
+function Cart() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchCart = async () => {
-    if (!userId) return; // Just to be safe
-    try {
-      console.log("Fetching cart for userId:", userId);
-      const res = await axios.get(`http://localhost:3000/api/cart?userId=${userId}`);
-      console.log("Cart response:", res.data);
-      const data = res.data;
+  const userId = user?._id;
 
-      if (Array.isArray(data)) {
-        setCartItems(data);
-      } else {
-        console.warn("Expected an array but got:", data);
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:3000/api/cart?userId=${userId}`
+        );
+        setCartItems(res.data);
+      } catch (err) {
+        console.error("Error fetching cart:", err);
         setCartItems([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to fetch cart:", err);
-      setCartItems([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  const updateQuantity = async (productId, delta) => {
-    try {
-      await axios.put("http://localhost:3000/api/cart", { userId, productId, delta });
-      fetchCart();
-    } catch (err) {
-      console.error("Failed to update quantity:", err);
-    }
-  };
+    fetchCart();
+  }, [user, userId, navigate]);
 
   const removeItem = async (productId) => {
     try {
       await axios.delete("http://localhost:3000/api/cart", {
         data: { userId, productId },
       });
-      fetchCart();
+      // Refresh
+      const res = await axios.get(
+        `http://localhost:3000/api/cart?userId=${userId}`
+      );
+      setCartItems(res.data);
     } catch (err) {
       console.error("Failed to remove item:", err);
+      alert("Failed to remove item from cart.");
     }
   };
 
-  useEffect(() => {
-    console.log("Cart component userId:", userId);
-    if (userId) {
-      fetchCart();
-    } else {
-      setLoading(false); // No user => no loading
-    }
-  }, [userId]);
+  if (loading)
+    return (
+      <div className="text-center py-10 text-gray-600 text-lg font-medium">
+        Loading cart...
+      </div>
+    );
 
-  if (loading) return <div className="text-center py-10">Loading cart...</div>;
+  if (cartItems.length === 0)
+    return (
+      <div className="text-center py-10 pt-20 text-gray-500 text-xl font-semibold">
+        Your cart is empty
+      </div>
+    );
 
-  if (!Array.isArray(cartItems) || cartItems.length === 0) {
-    return <div className="text-center py-10">Your cart is empty.</div>;
-  }
+  const totalPrice = cartItems.reduce(
+    (sum, item) => sum + item.quantity * item.productId.price,
+    0
+  );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold mb-6">Your Cart</h2>
+    <div className="max-w-4xl mx-auto px-4 py-8 pt-20">
+      <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">
+        Your Cart
+      </h2>
       <div className="space-y-6">
-        {cartItems.map((item) => {
-          const pid = item.productId._id || item.productId;
-          const title = item.productId.title || item.productId.name || "Product";
-
-          return (
-            <div
-              key={pid}
-              className="flex items-center justify-between border rounded-lg p-4 shadow-sm"
-            >
-              <div className="flex items-center space-x-4">
-                <img
-                  src={item.productId.imageURL}
-                  alt={title}
-                  className="w-20 h-20 object-cover rounded"
-                />
-                <div>
-                  <h4 className="text-lg font-semibold">{title}</h4>
-                  <p className="text-gray-600">{item.productId.price} ₹</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => updateQuantity(pid, -1)}
-                  className="px-2 py-1 border rounded hover:bg-gray-100"
-                >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                  onClick={() => updateQuantity(pid, 1)}
-                  className="px-2 py-1 border rounded hover:bg-gray-100"
-                >
-                  +
-                </button>
-                <button
-                  onClick={() => removeItem(pid)}
-                  className="ml-4 text-red-500 hover:underline"
-                >
-                  Remove
-                </button>
+        {cartItems.map((item) => (
+          <div
+            key={item.productId._id}
+            className="flex items-center justify-between border rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
+            <div className="flex items-center space-x-4">
+              <img
+                src={
+                  item.productId.imageURL || "https://via.placeholder.com/80"
+                }
+                alt={item.productId.title}
+                className="w-20 h-20 object-cover rounded-md"
+              />
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {item.productId.title}
+                </h3>
+                <p className="text-gray-600">Price: {item.productId.price} ₹</p>
+                <p className="text-gray-600">Quantity: {item.quantity}</p>
               </div>
             </div>
-          );
-        })}
+            <div className="flex flex-col items-end space-y-2">
+              <p className="text-lg font-semibold text-gray-900">
+                Subtotal: ₹{item.quantity * item.productId.price}
+              </p>
+              <button
+                onClick={() => removeItem(item.productId._id)}
+                className="text-red-600 hover:text-red-800 font-semibold"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-10 text-right border-t pt-6">
+        <p className="text-2xl font-bold text-gray-900">Total: ₹{totalPrice}</p>
+        <button
+          onClick={() => alert("Proceed to checkout - implement your flow")}
+          className="mt-4 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+        >
+          Proceed to Checkout
+        </button>
       </div>
     </div>
   );
-};
+}
 
 export default Cart;

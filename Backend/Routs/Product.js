@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 
 // GET product by ID   products/id/:id
 
-router.get('/products/id/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     const id = req.params.id;
     console.log("Requested is : " , id);
   try {

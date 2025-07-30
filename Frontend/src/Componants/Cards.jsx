@@ -89,7 +89,7 @@ function Cards() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/") // change to your actual route
+      .get("http://localhost:3000/api/products") // change to your actual route
       .then((res) => {
         setProducts(res.data);
         setLoading(false);

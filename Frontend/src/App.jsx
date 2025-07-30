@@ -6,6 +6,8 @@ import ProductPage from "./Componants/ProductDetails";
 import Cart from "./Componants/Cart";
 import Profile from "./Componants/Profile";
 import Cards from "./Componants/Cards";
+import Signup from "./Componants/SignUp";
+import Login from "./Componants/Login";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/products" element={<Cards />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <div className="mt-2.5">
         <Footer />
