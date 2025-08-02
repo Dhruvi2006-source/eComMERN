@@ -3,9 +3,9 @@ const router = express.Router();
 const User = require('../model/User'); // Adjust path if needed
 
 router.post('/', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password , name } = req.body;
   try {
-    const user = new User({ email, password });
+    const user = new User({ email, password , name});
     await user.save();
     res.status(201).json({ message: 'User created' });
   } catch (err) {

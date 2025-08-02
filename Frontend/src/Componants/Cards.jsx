@@ -1,145 +1,88 @@
-// // "use client";
-// import { cn } from "@/lib/utils";
-// import axios from "axios";
-// import { useState, useEffect } from "react";
-// import AnimatedLineText from "./AnimatedHeandling";
-
-// function Cards() {
-//   const [products, setProducts] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     axios
-//       .get("http://localhost:3000/") // change to your actual route
-//       .then((res) => {
-//         setProducts(res.data);
-//         setLoading(false);
-//       })
-//       .catch((err) => {
-//         console.error("Error fetching data:", err);
-//         setLoading(false);
-//       });
-//   }, []);
-
-//   if (loading) return <p className="p-4 text-lg">Loading...</p>;
-
-//   return (
-//     <>
-//      <h2 className="text-2xl md:text-4xl font-bold text-center mb-8 flex items-center justify-center gap-3">
-//       <span className="animate-bounce">✨</span>
-//       <AnimatedLineText>Trending Products</AnimatedLineText>
-//     </h2>
-//     <div className="w-full flex flex-wrap justify-center gap-6 px-4 md:px-8">
-//       {products.map((product, index) => (
-        
-//         <div
-//           key={index}
-//           className={cn(
-//             "group relative cursor-pointer overflow-hidden rounded-md shadow-xl flex flex-col justify-between p-4 transition-transform duration-300 hover:scale-105",
-//             "h-80 sm:h-96 w-full sm:w-[45%] md:w-[30%] lg:w-[22%] max-w-sm"
-//           )}
-//           style={{
-//             backgroundImage: `url(${
-//               product.imageURL || "https://via.placeholder.com/300"
-//             })`,
-//             backgroundSize: "cover",
-//             backgroundPosition: "center",
-//           }}
-//         >
-//           {/* Optional hover overlay */}
-//           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition duration-300 z-0" />
-
-//           {/* Content stays on top */}
-//           <div className="relative z-10 text-white">
-//             <h1 className="font-bold text-xl md:text-2xl">{product.title}</h1>
-//           </div>
-//           <div className="relative z-0 text-white">
-//             <p className="font-semibold text-sm my-4">{product.discription1}</p>
-//             <p className="font-normal text-sm my-4">Price : {product.price}</p>
-//           </div>
-//         </div>
-//       ))}
-//     </div>
-//     </>
-//   );
-// }
-
-// export default Cards;
-
-
-
-
-
-
-
-
-
-
-
-
+import PropTypes from "prop-types";
 import { cn } from "@/lib/utils";
-import axios from "axios";
-import { useState, useEffect } from "react";
 import AnimatedLineText from "./AnimatedHeandling";
 import { Link } from "react-router-dom";
 
-function Cards() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+function Cards({ products, loading, error }) {
+  if (loading) {
+    return (
+      <p className="p-4 text-lg text-center text-gray-600">
+        Loading products...
+      </p>
+    );
+  }
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/products") // change to your actual route
-      .then((res) => {
-        setProducts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-        setLoading(false);
-      });
-  }, []);
+  if (error) {
+    return <p className="p-4 text-lg text-center text-red-600">{error}</p>;
+  }
 
-  if (loading) return <p className="p-4 text-lg">Loading...</p>;
+  if (!products.length) {
+    return (
+      <p className="p-4 text-lg text-center text-gray-600">
+        No products found.
+      </p>
+    );
+  }
 
   return (
-    <>
+    <section className="flex flex-col items-center">
+      {/* Heading */}
       <h2 className="text-2xl md:text-4xl font-bold text-center mb-8 flex items-center justify-center gap-3">
         <span className="animate-bounce">✨</span>
         <AnimatedLineText>Trending Products</AnimatedLineText>
       </h2>
 
-      <div className="w-full flex flex-wrap justify-center gap-6 px-4 md:px-8">
+      {/* Products Grid */}
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 px-2 md:px-6">
         {products.map((product) => (
           <Link
             to={`/products/${product._id}`}
             key={product._id}
             className={cn(
-              "group relative cursor-pointer overflow-hidden rounded-md shadow-xl flex flex-col justify-between p-4 transition-transform duration-300 hover:scale-105",
-              "h-80 sm:h-96 w-full sm:w-[45%] md:w-[30%] lg:w-[22%] max-w-sm"
+              "group relative cursor-pointer overflow-hidden rounded-lg shadow-lg flex flex-col justify-end p-4 transition-transform duration-300 hover:scale-105 bg-gray-900",
+              "aspect-[3/4] max-w-full"
             )}
             style={{
-              backgroundImage: `url(${product.imageURL || "https://via.placeholder.com/300"})`,
+              backgroundImage: `url(${
+                product.imageURL ||
+                "https://via.placeholder.com/300?text=No+Image"
+              })`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
-            {/* Optional hover overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition duration-300 z-0" />
+            {/* Dark overlay */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition duration-300 z-0" />
 
-            {/* Content stays on top */}
+            {/* Product Info */}
             <div className="relative z-10 text-white">
-              <h1 className="font-bold text-xl md:text-2xl">{product.title}</h1>
-            </div>
-            <div className="relative z-10 text-white">
-              <p className="font-semibold text-sm my-4">{product.discription1}</p>
-              <p className="font-normal text-sm my-4">Price : {product.price}</p>
+              <h1 className="font-bold text-lg md:text-xl">{product.name}</h1>
+              <p className="text-sm my-2 line-clamp-2">
+                {product.discription1 || "No description available"}
+              </p>
+              <p className="font-semibold text-base mt-2">
+                ₹ {product.price?.toLocaleString() || "N/A"}
+              </p>
             </div>
           </Link>
         ))}
       </div>
-    </>
+    </section>
   );
 }
+
+Cards.propTypes = {
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+};
 
 export default Cards;

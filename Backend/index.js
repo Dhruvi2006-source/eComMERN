@@ -10,7 +10,6 @@ dotenv.config();
 const rout = require('./Routs/Product')
 const cart = require('./Routs/Cart');
 const order = require('./Routs/Orders');
-
 const authRoutes = require('./Routs/Auth'); 
 
 dotenv.config();
@@ -21,7 +20,7 @@ const port = 3000
 app.use(express.json());
 app.use(cors());
 
-const MONGO_URI = 'mongodb://localhost:27017/product'; // Match this with Compass
+const MONGO_URI = 'mongodb+srv://2006dhruvi:Dhruvi2006@clusterone.orzlmh2.mongodb.net/product'; // Match this with Compass
 
 mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
