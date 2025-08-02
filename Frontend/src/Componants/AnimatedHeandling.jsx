@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-export default function AnimatedLineText({ children, className = "" }) {
+ function AnimatedLineText({ children, className = "" }) {
   return (
     <motion.span
       className={`text-transparent bg-clip-text 
@@ -20,3 +20,5 @@ export default function AnimatedLineText({ children, className = "" }) {
     </motion.span>
   );
 }
+
+export default AnimatedLineText;
