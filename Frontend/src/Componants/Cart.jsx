@@ -22,7 +22,7 @@ function Cart() {
     const fetchCart = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/cart?userId=${userId}`
+          `https://ecommern-backend.onrender.com/api/cart?userId=${userId}`
         );
         setCartItems(res.data);
       } catch (err) {
@@ -37,11 +37,11 @@ function Cart() {
 
   const removeItem = async (productId) => {
     try {
-      await axios.delete("http://localhost:5000/api/cart", {
+      await axios.delete("https://ecommern-backend.onrender.com/api/cart", {
         data: { userId, productId },
       });
       const res = await axios.get(
-        `http://localhost:5000/api/cart?userId=${userId}`
+        `https://ecommern-backend.onrender.com/api/cart?userId=${userId}`
       );
       setCartItems(res.data);
     } catch (err) {
@@ -53,13 +53,13 @@ function Cart() {
   const updateQuantity = async (productId, delta) => {
     if (!userId) return;
     try {
-      await axios.put("http://localhost:5000/api/cart", {
+      await axios.put("https://ecommern-backend.onrender.com/api/cart", {
         userId,
         productId,
         delta,
       });
       const res = await axios.get(
-        `http://localhost:5000/api/cart?userId=${userId}`
+        `https://ecommern-backend.onrender.com/api/cart?userId=${userId}`
       );
       setCartItems(res.data);
     } catch (err) {
