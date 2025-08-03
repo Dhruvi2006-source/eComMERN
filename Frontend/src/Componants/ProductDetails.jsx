@@ -19,7 +19,7 @@ function ProductPage() {
     setLoading(true);
     setError(null);
     axios
-      .get(`http://localhost:5000/api/products/id/${id}`)
+      .get(`https://ecommern-backend.onrender.com/api/products/id/${id}`)
       .then((res) => {
         setProduct(res.data);
         const images = [
@@ -47,7 +47,7 @@ function ProductPage() {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/api/cart", {
+      await axios.post("https://ecommern-backend.onrender.com/api/cart", {
         userId: user._id,
         productId: product._id,
         quantity: 1,
