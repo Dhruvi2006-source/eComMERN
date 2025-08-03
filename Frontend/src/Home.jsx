@@ -264,6 +264,7 @@ import debounce from 'lodash.debounce';
 import Cards from './Componants/Cards';
 import BannerCarousel from './Componants/Carousel';
 import ImageGrid from './Componants/ImageGrid';
+import Footer from './Componants/Footer';
 import { MagnifyingGlassIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 function Home() {
@@ -278,7 +279,7 @@ function Home() {
   const fetchCategories = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/products/category"
+        "http://localhost:5000/api/products/category"
       );
       if (!response.ok) {
         const text = await response.text();
@@ -307,7 +308,7 @@ function Home() {
 
       console.log("Fetching with query:", query.toString());
       const response = await fetch(
-        `http://localhost:3000/api/products?${query.toString()}`
+        `http://localhost:5000/api/products?${query.toString()}`
       );
       if (!response.ok) {
         const text = await response.text();
@@ -494,6 +495,9 @@ function Home() {
         )}
         <Cards products={products} loading={loading} error={error} />
       </motion.section>
+            <div className="mt-2.5">
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import Cart from "./Componants/Cart";
 import Cards from "./Componants/Cards";
 import Signup from "./Componants/SignUp";
 import Login from "./Componants/Login";
+import Orders from "./Componants/Orders";
 // import Cards from "./Componants/Cards";
 
 function App() {
@@ -21,14 +22,11 @@ function App() {
         <Route path="/" element={<Home />} className="mt-1.5" />
         <Route path="/products/:id" element={<ProductPage />} />
         <Route path="/cart" element={<Cart />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/orders" element= {<Orders/>}/>
         <Route path="/products" element={<Cards />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-      <div className="mt-2.5">
-        <Footer />
-      </div>
     </>
   );
 }

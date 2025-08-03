@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import Footer from "./Footer"
 
 function Cart() {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ function Cart() {
     const fetchCart = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3000/api/cart?userId=${userId}`
+          `http://localhost:5000/api/cart?userId=${userId}`
         );
         setCartItems(res.data);
       } catch (err) {
@@ -36,11 +37,11 @@ function Cart() {
 
   const removeItem = async (productId) => {
     try {
-      await axios.delete("http://localhost:3000/api/cart", {
+      await axios.delete("http://localhost:5000/api/cart", {
         data: { userId, productId },
       });
       const res = await axios.get(
-        `http://localhost:3000/api/cart?userId=${userId}`
+        `http://localhost:5000/api/cart?userId=${userId}`
       );
       setCartItems(res.data);
     } catch (err) {
@@ -52,13 +53,13 @@ function Cart() {
   const updateQuantity = async (productId, delta) => {
     if (!userId) return;
     try {
-      await axios.put("http://localhost:3000/api/cart", {
+      await axios.put("http://localhost:5000/api/cart", {
         userId,
         productId,
         delta,
       });
       const res = await axios.get(
-        `http://localhost:3000/api/cart?userId=${userId}`
+        `http://localhost:5000/api/cart?userId=${userId}`
       );
       setCartItems(res.data);
     } catch (err) {
@@ -287,6 +288,9 @@ function Cart() {
           Proceed to Checkout
         </motion.button>
       </motion.div>
+      <div className="mt-2.5 mb-0">
+        <Footer />
+      </div>
     </div>
   );
 }

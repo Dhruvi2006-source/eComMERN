@@ -1,6 +1,7 @@
 const express = require("express");
 const Cart = require("../model/Cart");
 const router = express.Router();
+// const product = require("../model/Product")
 
 // POST /api/cart
 

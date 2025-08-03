@@ -11,6 +11,6 @@ const ProductSchema = new mongoose.Schema({
   discription2: String,
   price: Number,
   category: String,
-} , { timestamps: true });
+});
 
 module.exports = mongoose.model("Product", ProductSchema, "fasion");
