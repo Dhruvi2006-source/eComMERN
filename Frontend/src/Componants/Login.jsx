@@ -282,7 +282,7 @@ function Login() {
             to="/signup"
             className="text-teal-600 font-bold hover:underline transition"
           >
-            Login here
+            Sign up
           </Link>
           
 {/*           <a
