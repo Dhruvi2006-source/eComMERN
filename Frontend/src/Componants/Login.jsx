@@ -279,7 +279,7 @@ function Login() {
           Don’t have an account?{" "}
 
           <Link
-            to="/login"
+            to="/signup"
             className="text-teal-600 font-bold hover:underline transition"
           >
             Login here
