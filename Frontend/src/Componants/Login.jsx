@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -276,12 +277,20 @@ function Login() {
         {/* Signup link */}
         <div className="mt-6 text-sm text-center text-gray-500">
           Don’t have an account?{" "}
-          <a
+
+          <Link
+            to="/login"
+            className="text-teal-600 font-bold hover:underline transition"
+          >
+            Login here
+          </Link>
+          
+{/*           <a
             href="/signup"
             className="text-teal-600 font-bold hover:underline transition"
           >
             Sign up
-          </a>
+          </a> */}
         </div>
       </motion.div>
     </div>
